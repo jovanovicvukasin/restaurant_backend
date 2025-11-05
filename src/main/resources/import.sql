@@ -10,16 +10,16 @@ INSERT INTO restaurant_table (id, table_number, seats) VALUES (3, 12, 4);
 INSERT INTO restaurant_table (id, table_number, seats) VALUES (4, 13, 4);
 INSERT INTO restaurant_table (id, table_number, seats) VALUES (5, 14, 2);
 
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (1, 'Pasta Carbonara', 'Kremasta italijanska pasta sa slaninom', 'PASTA', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (2, 'Pizza Capricciosa', 'Pizza sa šunkom, pečurkama i sirom', 'PIZZA', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (3, 'Cezar salata', 'Salata sa piletinom, parmezanom i dresingom', 'SALAD', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (4, 'Coca cola', 'Osvežavajuće bezalkoholno piće, 330ml', 'DRINK', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (5, 'Tiramisu', 'Kremasti italijanski desert sa kafom i maskarponeom', 'DESSERT', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (6, 'Pizza Margherita', 'Pizza sa paradajz pelatom i sirom', 'PIZZA', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (7, 'Rosa voda', 'Negazirana voda, 500ml', 'DRINK', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (8, 'Spaghetti Bolognese', 'Špagete u sosu od paradajza i mlevenog mesa', 'PASTA', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (9, 'Čokoladni sufle', 'Topli kolač od čokolade sa kuglom sladoleda', 'DESSERT', null);
-INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (10, 'Lasagna Bolognese', 'Zapečene lazanje sa mlevenim mesom i sirom', 'PASTA', null);
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (1, 'Pasta Carbonara', 'Kremasta italijanska pasta sa slaninom', 'PASTA', '/uploads/carbonara.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (2, 'Pizza Capricciosa', 'Pizza sa šunkom, pečurkama i sirom', 'PIZZA', '/uploads/capricciosa.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (3, 'Cezar salata', 'Salata sa piletinom, parmezanom i dresingom', 'SALAD', '/uploads/cezar.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (4, 'Coca cola', 'Osvežavajuće bezalkoholno piće, 330ml', 'DRINK', '/uploads/cola.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (5, 'Tiramisu', 'Kremasti italijanski desert sa kafom i maskarponeom', 'DESSERT', '/uploads/tiramisu.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (6, 'Pizza Margherita', 'Pizza sa paradajz pelatom i sirom', 'PIZZA', '/uploads/margherita.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (7, 'Rosa voda', 'Negazirana voda, 500ml', 'DRINK', '/uploads/rosa.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (8, 'Spaghetti Bolognese', 'Špagete u sosu od paradajza i mlevenog mesa', 'PASTA', '/uploads/bolognese.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (9, 'Čokoladni sufle', 'Topli kolač od čokolade sa kuglom sladoleda', 'DESSERT', '/uploads/sufle.jpg');
+INSERT INTO menu_items (id, name, description, item_category, image_url) VALUES (10, 'Lasagna Bolognese', 'Zapečene lazanje sa mlevenim mesom i sirom', 'PASTA', '/uploads/lazagna.jpg');
 
 INSERT INTO price_items (id, price, currency, valid_from, valid_to, menu_item_id) VALUES (1, 1100.99, 'RSD', '2025-10-01', '2026-01-01', 1);
 INSERT INTO price_items (id, price, currency, valid_from, valid_to, menu_item_id) VALUES (2, 1250.00, 'RSD', '2025-10-01', '2026-01-01', 2);

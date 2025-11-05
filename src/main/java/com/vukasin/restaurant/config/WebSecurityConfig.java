@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/api/authenticate/**").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
+                       // .requestMatchers("/uploads/**").permitAll()
                         //ADMIN
 
                         //CUSTOMER
