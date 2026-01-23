@@ -2,12 +2,14 @@ package com.vukasin.restaurant.controller;
 
 import com.vukasin.restaurant.converter.MenuItemConverter;
 import com.vukasin.restaurant.dto.MenuItemDTO;
+import com.vukasin.restaurant.model.ItemCategory;
 import com.vukasin.restaurant.model.MenuItem;
 import com.vukasin.restaurant.service.MenuItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -53,6 +55,16 @@ public class MenuItemController {
         return ResponseEntity.ok(dtoList);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<MenuItemDTO>> getActiveMenuItems() {
+        List<MenuItem> activeMenuItems = menuItemService.findByActive(true);
+        List<MenuItemDTO> dtoList = new ArrayList<>();
+        for(MenuItem menuItem : activeMenuItems) {
+            dtoList.add(menuItemConverter.toDTO(menuItem));
+        }
+        return ResponseEntity.ok(dtoList);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MenuItemDTO> getMenuItemById(@PathVariable Long id) {
         MenuItem menuItem = menuItemService.findById(id);
@@ -74,11 +86,31 @@ public class MenuItemController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
-        menuItemService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/toggle-active/{id}")
+    public ResponseEntity<Void> toggleActive(@PathVariable Long id) {
+        menuItemService.toggleActive(id);
+        return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<MenuItemDTO>> getMenuItemByCategory(@PathVariable String category) {
+
+        ItemCategory itemCategory;
+
+        try {
+            itemCategory = ItemCategory.valueOf(category.toUpperCase());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<MenuItem> menuItems = menuItemService.findByItemCategoryActive(itemCategory, true);
+        List<MenuItemDTO> dtoList = new ArrayList<>();
+        for(MenuItem menuItem : menuItems) {
+            dtoList.add(menuItemConverter.toDTO(menuItem));
+        }
+
+        return ResponseEntity.ok(dtoList);
     }
 
 

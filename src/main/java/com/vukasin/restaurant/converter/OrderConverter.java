@@ -3,9 +3,11 @@ package com.vukasin.restaurant.converter;
 import com.vukasin.restaurant.dto.MenuItemDTO;
 import com.vukasin.restaurant.dto.OrderDTO;
 import com.vukasin.restaurant.dto.OrderItemDTO;
+import com.vukasin.restaurant.dto.UserInfoDTO;
 import com.vukasin.restaurant.model.MenuItem;
 import com.vukasin.restaurant.model.Order;
 import com.vukasin.restaurant.model.OrderItem;
+import com.vukasin.restaurant.model.User;
 import com.vukasin.restaurant.repository.MenuItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,20 @@ public class OrderConverter {
     public OrderDTO toDTO(Order entity) {
         if (entity == null) return null;
 
+        User user = entity.getUser();
+        UserInfoDTO userDTO = null;
+
+        if (user != null) {
+            userDTO = new UserInfoDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getSurname(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getPhone()
+            );
+        }
+
         List<OrderItemDTO> orderItemDTOs = new ArrayList<>();
         if (entity.getOrderItems() != null) {
             for (OrderItem orderItem : entity.getOrderItems()) {
@@ -39,7 +55,7 @@ public class OrderConverter {
         dto.setOrderStatus(entity.getOrderStatus());
         dto.setOrderType(entity.getOrderType());
         dto.setTotalAmount(entity.getTotalAmount());
-        dto.setUserId(entity.getUser() != null ? entity.getUser().getId() : null);
+        dto.setUser(userDTO);
         dto.setOrderItems(orderItemDTOs);
 
         return dto;
@@ -57,7 +73,7 @@ public class OrderConverter {
 
         if (dto.getOrderItems() != null) {
             for (OrderItemDTO orderItemDTO : dto.getOrderItems()) {
-                MenuItem menuItem = menuItemRepository.findById(orderItemDTO.getMenuItemId())
+                MenuItem menuItem = menuItemRepository.findById(orderItemDTO.getMenuItem().getId())
                         .orElseThrow(() -> new IllegalArgumentException("Menu item not found."));
                 OrderItem orderItem = orderItemConverter.toEntity(orderItemDTO, menuItem);
                 entity.addOrderItem(orderItem);

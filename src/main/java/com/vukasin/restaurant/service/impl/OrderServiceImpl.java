@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
-            MenuItem menuItem = menuItemRepository.findById(orderItemDTO.getMenuItemId())
+            MenuItem menuItem = menuItemRepository.findById(orderItemDTO.getMenuItem().getId())
                     .orElseThrow(() -> new RuntimeException("MenuItem not found"));
 
 
@@ -163,6 +163,22 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         return orderConverter.toDTO(order);
+    }
+
+    @Override
+    public List<OrderDTO> searchOrders(RequestStatus status, OrderType orderType, LocalDate fromDate, LocalDate toDate, String email, Double minTotal, Double maxTotal) {
+
+        LocalDateTime from = fromDate != null ? fromDate.atStartOfDay() : null;
+
+        LocalDateTime to = toDate != null ? toDate.plusDays(1).atStartOfDay() : null;
+
+        List<Order> orders = orderRepository.searchOrders(status, orderType,  email, from, to, minTotal, maxTotal);
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+        for (Order o : orders) {
+            OrderDTO dto = orderConverter.toDTO(o);
+            orderDTOs.add(dto);
+        }
+        return orderDTOs;
     }
 
     private Double getActivePrice(MenuItem menuItem) {

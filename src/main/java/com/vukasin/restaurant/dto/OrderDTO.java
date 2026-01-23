@@ -21,6 +21,6 @@ public class OrderDTO {
     private RequestStatus orderStatus;
     private OrderType orderType;
     private Double totalAmount;
-    private Long userId;
+    private UserInfoDTO user;
     private List<OrderItemDTO> orderItems;
 }

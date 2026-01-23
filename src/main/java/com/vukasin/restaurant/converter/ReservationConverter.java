@@ -1,8 +1,10 @@
 package com.vukasin.restaurant.converter;
 
-import com.vukasin.restaurant.dto.ReservationRequestDTO;
-import com.vukasin.restaurant.dto.ReservationResponseDTO;
+import com.vukasin.restaurant.dto.*;
 import com.vukasin.restaurant.model.Reservation;
+import com.vukasin.restaurant.model.RestaurantTable;
+import com.vukasin.restaurant.model.User;
+import jakarta.persistence.Table;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,14 +13,39 @@ public class ReservationConverter {
     public ReservationResponseDTO toDTO(Reservation entity) {
         if (entity == null) return null;
 
+        User user = entity.getUser();
+        UserInfoDTO userDTO = null;
+
+        if (user != null) {
+            userDTO = new UserInfoDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getSurname(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getPhone()
+            );
+        }
+
+        RestaurantTable table = entity.getTable();
+        RestaurantTableDTO tableDTO = null;
+
+        if (table != null) {
+            tableDTO = new RestaurantTableDTO(
+                    table.getId(),
+                    table.getTableNumber(),
+                    table.getSeats()
+            );
+        }
+
         return ReservationResponseDTO.builder()
                 .id(entity.getId())
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .numberOfGuests(entity.getNumberOfGuests())
                 .status(entity.getRequestStatus())
-                .tableId(entity.getTable() != null ? entity.getTable().getId() : null)
-                .userId(entity.getUser() != null ? entity.getUser().getId() : null)
+                .table(tableDTO)
+                .user(userDTO)
                 .build();
     }
 

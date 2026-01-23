@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.RouterFunctions;
+import org.springframework.web.servlet.function.ServerResponse;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 @Configuration
@@ -51,6 +58,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public RouterFunction<ServerResponse> routes() {
+        return RouterFunctions.resources("/uploads/**", new FileSystemResource("uploads/"));
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
@@ -58,10 +70,24 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/api/authenticate/**").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
-                       // .requestMatchers("/uploads/**").permitAll()
-                        //ADMIN
-
+                        .requestMatchers(HttpMethod.GET,"/api/menu-items/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         //CUSTOMER
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/reservations/**").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/reservations/my").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT, "/api/reservations/*/cancel").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/my").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/me").hasRole("CUSTOMER")
+
+                        //ADMIN
+                        .requestMatchers("/api/menu-items/**").hasRole("ADMIN")
+                        .requestMatchers( "/api/orders/**").hasRole("ADMIN")
+                        .requestMatchers("/api/reservations/**").hasRole("ADMIN")
+                        .requestMatchers("/api/reports/**").hasRole("ADMIN")
+                        .requestMatchers("/api/images/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated());
 

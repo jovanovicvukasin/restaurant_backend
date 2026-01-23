@@ -1,6 +1,7 @@
 package com.vukasin.restaurant.service;
 
 import com.vukasin.restaurant.dto.MenuItemDTO;
+import com.vukasin.restaurant.model.ItemCategory;
 import com.vukasin.restaurant.model.MenuItem;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public interface MenuItemService {
     List<MenuItem> findAll();
     MenuItem findById(Long id);
     MenuItem update(Long id, MenuItem menuItem);
-    void delete(Long id);
+    void toggleActive(Long id);
+    List<MenuItem> findByItemCategoryActive(ItemCategory category, Boolean active);
+    List<MenuItem> findByActive(Boolean active);
 
 }

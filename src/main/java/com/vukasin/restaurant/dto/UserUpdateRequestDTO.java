@@ -14,7 +14,7 @@ public class UserUpdateRequestDTO {
     private String surname;
     @NotBlank(message = "Phone number cannot be empty")
     private String phone;
+    @NotBlank(message = "Address cannot be empty")
     private String address;
-    @NotBlank(message = "Password cannot be empty")
     private String password;
 }

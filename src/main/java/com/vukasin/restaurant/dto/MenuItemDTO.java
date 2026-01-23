@@ -20,6 +20,7 @@ public class MenuItemDTO {
     private ItemCategory itemCategory;
     private String description;
     private String imageUrl;
+    private boolean active;
 
     private List<PriceItemDTO> priceItemDTOList = new ArrayList<>();
 

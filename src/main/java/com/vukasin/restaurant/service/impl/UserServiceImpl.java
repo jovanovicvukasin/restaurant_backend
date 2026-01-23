@@ -9,6 +9,7 @@ import com.vukasin.restaurant.model.User;
 import com.vukasin.restaurant.repository.UserRepository;
 import com.vukasin.restaurant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -116,5 +117,34 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.delete(user);
 
+    }
+
+    @Override
+    public UserResponseDTO getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+
+        return userConverter.toDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO updateCurrentUser(UserUpdateRequestDTO requestDTO) {
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isBlank()) {
+            requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        }
+
+        userConverter.updateEntity(user, requestDTO);
+
+        return userConverter.toDTO(userRepository.save(user));
     }
 }

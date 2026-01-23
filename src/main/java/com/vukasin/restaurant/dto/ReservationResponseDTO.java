@@ -15,6 +15,6 @@ public class ReservationResponseDTO {
     private LocalDateTime endTime;
     private int numberOfGuests;
     private RequestStatus status;
-    private Long tableId;
-    private Long userId;
+    private RestaurantTableDTO table;
+    private UserInfoDTO user;
 }

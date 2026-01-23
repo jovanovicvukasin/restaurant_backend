@@ -26,6 +26,7 @@ public class MenuItemConverter {
                 .description(menuItem.getDescription())
                 .itemCategory(menuItem.getItemCategory())
                 .imageUrl(menuItem.getImageUrl())
+                .active(menuItem.isActive())
                 .priceItemDTOList(menuItem.getPrices().stream()
                         .map(priceItemConverter::toDTO)
                         .collect(Collectors.toList()))
@@ -41,6 +42,7 @@ public class MenuItemConverter {
                 .description(dto.getDescription())
                 .itemCategory(dto.getItemCategory())
                 .imageUrl(dto.getImageUrl())
+                .active(dto.isActive())
                 .build();
 
         if(dto.getPriceItemDTOList() != null) {

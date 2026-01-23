@@ -50,4 +50,14 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMyProfile() {
+        return ResponseEntity.ok(userService.getCurrentUser());
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserResponseDTO> updateMyProfile(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+        return ResponseEntity.ok(userService.updateCurrentUser(userUpdateRequestDTO));
+    }
 }

@@ -3,6 +3,7 @@ package com.vukasin.restaurant.dto;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class RestaurantTableDTO {
 
     private Long id;
 
-    @NotBlank(message = "Table number is required")
+    @NotNull
     private int tableNumber;
 
     @Min(value = 1, message = "table must have at least one seat")

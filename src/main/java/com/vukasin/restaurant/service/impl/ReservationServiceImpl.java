@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,14 @@ public class ReservationServiceImpl implements ReservationService {
             throw new IllegalArgumentException("Start time must be before end time.");
         }
 
+        if(request.getStartTime().isBefore(LocalDateTime.now(ZoneId.of("Europe/Belgrade")))){
+            throw new IllegalArgumentException("Start time cannot be in the past.");
+
+        }
+
+        System.out.println("Frontend startTime: " + request.getStartTime());
+        System.out.println("Backend now(): " + LocalDateTime.now(ZoneId.of("Europe/Belgrade")));
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
@@ -73,6 +83,10 @@ public class ReservationServiceImpl implements ReservationService {
         RestaurantTable table = tableRepository.findById(tableId)
                 .orElseThrow(() -> new IllegalArgumentException("Table not found."));
 
+        if (reservation.getRequestStatus() != RequestStatus.NEW) {
+            throw new IllegalArgumentException("Only for NEW reservations can be assigned table..");
+        }
+
         if(table.getSeats() < reservation.getNumberOfGuests()) {
             throw new IllegalArgumentException("Number of seats must be greater than the number of guests.");
         }
@@ -94,6 +108,10 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found."));
+
+        if (reservation.getRequestStatus() == RequestStatus.CANCELED) {
+            throw new IllegalArgumentException("Reservation is already cancelled.");
+        }
 
         reservation.setRequestStatus(RequestStatus.CANCELED);
         reservationRepository.save(reservation);
@@ -135,6 +153,19 @@ public class ReservationServiceImpl implements ReservationService {
 
        return dtos;
 
+    }
+
+    @Override
+    public List<ReservationResponseDTO> searchReservations(RequestStatus status, LocalDateTime from, LocalDateTime to, String email, Integer tableNumber) {
+
+        List<Reservation> reservations = reservationRepository.searchReservations(status, from, to, email, tableNumber);
+        List<ReservationResponseDTO> dtos = new ArrayList<>();
+        for (Reservation r : reservations) {
+            ReservationResponseDTO dto = reservationConverter.toDTO(r);
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
 }

@@ -5,11 +5,9 @@ import com.vukasin.restaurant.dto.TopSellingItemDTO;
 import com.vukasin.restaurant.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,21 +18,19 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/revenue")
-    public ResponseEntity<RevenueReportDTO> getRevenueReport(@RequestBody RevenueReportDTO revenueReportDTO) {
-        if (revenueReportDTO.getFromDate().isAfter(revenueReportDTO.getToDate())) {
+    public ResponseEntity<RevenueReportDTO> getRevenueReport(@RequestParam LocalDate fromDate, @RequestParam LocalDate toDate) {
+        if (fromDate.isAfter(toDate)) {
             return ResponseEntity.badRequest().build();
         }
-        RevenueReportDTO dto = reportService.getRevenueReport(revenueReportDTO.getFromDate(), revenueReportDTO.getToDate());
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(reportService.getRevenueReport(fromDate, toDate));
     }
 
     @GetMapping("/top-items")
-    public ResponseEntity<List<TopSellingItemDTO>> getTopSellingItems(@RequestBody TopSellingItemDTO topSellingItemDTO) {
+    public ResponseEntity<List<TopSellingItemDTO>> getTopSellingItems(@RequestParam LocalDate fromDate, @RequestParam LocalDate toDate) {
 
-        if (topSellingItemDTO.getFromDate().isAfter(topSellingItemDTO.getToDate())) {
+        if (fromDate.isAfter(toDate)) {
             return ResponseEntity.badRequest().build();
         }
-        List<TopSellingItemDTO> topItems = reportService.getTopSellingItems(topSellingItemDTO.getFromDate(), topSellingItemDTO.getToDate());
-        return ResponseEntity.ok(topItems);
+        return ResponseEntity.ok(reportService.getTopSellingItems(fromDate, toDate));
     }
 }

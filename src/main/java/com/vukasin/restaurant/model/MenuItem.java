@@ -39,4 +39,7 @@ public class MenuItem {
 
     @OneToMany(mappedBy = "menuItem")
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @Column(nullable = false)
+    private boolean active = true;
 }

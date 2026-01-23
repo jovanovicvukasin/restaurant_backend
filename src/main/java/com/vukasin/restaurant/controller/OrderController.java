@@ -1,13 +1,18 @@
 package com.vukasin.restaurant.controller;
 
 import com.vukasin.restaurant.dto.OrderDTO;
+import com.vukasin.restaurant.model.OrderType;
+import com.vukasin.restaurant.model.RequestStatus;
 import com.vukasin.restaurant.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -64,6 +69,18 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<OrderDTO>> searchOrders(@RequestParam(required = false) RequestStatus status,
+                                                       @RequestParam(required = false) OrderType orderType,
+                                                       @RequestParam(required = false) String email,
+                                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate fromDate,
+                                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate toDate,
+                                                       @RequestParam(required = false) Double minTotal,
+                                                       @RequestParam(required = false) Double maxTotal)
+            {
+        return ResponseEntity.ok(orderService.searchOrders(status, orderType, fromDate, toDate, email, minTotal, maxTotal));
     }
 
 

@@ -14,4 +14,7 @@ public interface UserService extends UserDetailsService {
     List<UserResponseDTO> getAllUsers();
     UserResponseDTO updateUser(Long id, UserUpdateRequestDTO requestDTO);
     void deleteUser(Long id);
+
+    UserResponseDTO getCurrentUser();
+    UserResponseDTO updateCurrentUser(UserUpdateRequestDTO requestDTO);
 }

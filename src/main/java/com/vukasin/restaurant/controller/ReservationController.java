@@ -2,11 +2,14 @@ package com.vukasin.restaurant.controller;
 
 import com.vukasin.restaurant.dto.ReservationRequestDTO;
 import com.vukasin.restaurant.dto.ReservationResponseDTO;
+import com.vukasin.restaurant.model.RequestStatus;
 import com.vukasin.restaurant.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -51,6 +54,15 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDTO> getReservation(@PathVariable Long id) {
         ReservationResponseDTO reservation = reservationService.getReservationById(id);
         return reservation != null ? ResponseEntity.ok(reservation) : ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ReservationResponseDTO>> searchReservation(@RequestParam(required = false) RequestStatus status,
+                                                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+                                                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
+                                                                          @RequestParam(required = false) String email,
+                                                                          @RequestParam(required = false) Integer tableNumber) {
+        return ResponseEntity.ok(reservationService.searchReservations(status, from, to, email, tableNumber));
     }
 
 
